@@ -655,26 +655,22 @@ body {
 
     if (!audio) return;
 
-    audio.load();
+    audio.currentTime = 0;
 
-    const playPromise = audio.play();
+    audio.play().then(() => {
 
-    if (playPromise !== undefined) {
+        if (playIcon) {
+            playIcon.innerHTML =
+            '<rect x="7" y="6" width="3" height="12"/><rect x="14" y="6" width="3" height="12"/>';
+        }
 
-        playPromise.then(() => {
+    }).catch((err) => {
 
-            if (playIcon) {
-                playIcon.innerHTML =
-                '<rect x="7" y="6" width="3" height="12"/><rect x="14" y="6" width="3" height="12"/>';
-            }
+        console.log("No fue posible iniciar la reproducción:", err);
 
-        }).catch(err => {
+    });
 
-            console.log("El navegador bloqueó la reproducción automática.", err);
-
-        });
-
-    }
+}
 
 }
 /* ── UI LOGIC ── */
