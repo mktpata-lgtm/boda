@@ -580,39 +580,6 @@ body {
 
 
 
-  <!-- ── MUSIC PLAYER ── -->
-  <div class="music-section reveal">
-    <div class="player-card glass-panel">
-      <span class="music-label">Nuestra Música Favorita❤️</span>
-      <p class="music-title" id="song-title">Que Bendición</p>
-
-      <div class="custom-player">
-        
-        <!-- REPRODUCTOR DE AUDIO CON ENLACE DE DROPBOX -->
-        <audio id="auto" src="https://www.dropbox.com/scl/fi/ccnveomu6hka0ta0fcekw/Juan-Luis-Guerra-Mi-Bendicion.mp3?rlkey=nyv91ssrycyarxteqvm0csjqp&st=k3efe9hb&dl=1" preload="metadata"></audio>
-
-
-        
-
-        <div class="player-controls">
-          <button class="play-btn" id="play-btn" onclick="togglePlay()">
-            <svg id="play-icon" viewBox="0 0 24 24"><polygon points="8,6 18,12 8,18"/></svg>
-          </button>
-        </div>
-
-        <div class="progress-wrap" onclick="seekAudio(event)">
-          <div class="progress-bg">
-            <div class="progress-fill" id="progress-fill"></div>
-          </div>
-        </div>
-        <div class="time-row">
-          <span id="cur-time">0:00</span>
-          <span id="dur-time">0:00</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- ── WHATSAPP ── -->
   <div class="wa-section glass-panel reveal">
     <h2 class="section-title">Contacto</h2>
@@ -745,7 +712,7 @@ function openLightbox(el) {
 function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
 
 /* ── AUDIO PLAYER ── */
-const audio = document.getElementById('audio-player');
+const audio = document.getElementById("auto");
 const playIcon = document.getElementById('play-icon');
 const fill = document.getElementById('progress-fill');
 const curEl = document.getElementById('cur-time');
