@@ -622,19 +622,24 @@ body {
 
     if (!audio) return;
 
-    audio.currentTime = 0;
+    audio.muted = false;
+    audio.volume = 1;
+    audio.preload = "auto";
 
-    audio.play()
-    .then(() => {
+    const promise = audio.play();
 
-        if (playIcon) {
-            playIcon.innerHTML =
-            '<rect x="7" y="6" width="3" height="12"/><rect x="14" y="6" width="3" height="12"/>';
-        }
+    if (promise !== undefined) {
+        promise.then(() => {
 
-    })
-    .catch(err => console.log(err));
+            if (playIcon) {
+                playIcon.innerHTML =
+                '<rect x="7" y="6" width="3" height="12"/><rect x="14" y="6" width="3" height="12"/>';
+            }
 
+        }).catch(error => {
+            console.log("Autoplay bloqueado:", error);
+        });
+    }
 }
 /* ── UI LOGIC ── */
 function openInvitation() {
