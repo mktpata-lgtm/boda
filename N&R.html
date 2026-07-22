@@ -650,28 +650,24 @@ body {
 
   function playMusic() {
 
-    const audio = document.getElementById("audio-player");
+    const audio = document.getElementById("auto");
     const playIcon = document.getElementById("play-icon");
 
     if (!audio) return;
 
     audio.currentTime = 0;
 
-    audio.play().then(() => {
+    audio.play()
+    .then(() => {
 
         if (playIcon) {
             playIcon.innerHTML =
             '<rect x="7" y="6" width="3" height="12"/><rect x="14" y="6" width="3" height="12"/>';
         }
 
-    }).catch((err) => {
+    })
+    .catch(err => console.log(err));
 
-        console.log("No fue posible iniciar la reproducción:", err);
-
-    });
-
- }
-}
 }
 /* ── UI LOGIC ── */
 function openInvitation() {
