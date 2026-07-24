@@ -33,14 +33,13 @@ body {
   overflow-x: hidden; 
 }
 
-/* Filtro base para suavizar el fondo y dar un tono cálido y elegante */
 .bg-overlay {
   position: fixed; inset: 0;
   background: linear-gradient(135deg, rgba(247, 245, 242, 0.75) 0%, rgba(225, 218, 208, 0.6) 100%);
   z-index: -1;
 }
 
-/* ──────────────── PARTÍCULAS BOKEH (Ultra Realista) ──────────────── */
+/* ──────────────── PARTÍCULAS BOKEH ──────────────── */
 #petals-canvas {
   position: fixed; top: 0; left: 0;
   width: 100%; height: 100%;
@@ -50,7 +49,6 @@ body {
   mix-blend-mode: screen;
 }
 
-/* ──────────────── EFECTO VIDRIO REALISTA ──────────────── */
 .glass-panel {
   background: var(--glass-bg);
   backdrop-filter: blur(15px) saturate(70%);
@@ -60,208 +58,163 @@ body {
   border-radius: 0px;
 }
 
-/* ──────────────── COVER PAGE ──────────────── */
+/* ──────────────── COVER PAGE (SOBRE MEJORADO) ──────────────── */
 #cover {
   position: fixed; inset: 0;
   z-index: 50;
-  transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: #F8F6F1;
+  transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 #cover.hidden {
   opacity: 0;
-  transform: scale(1.03);
   pointer-events: none;
 }
 
-/* ── SOBRE (envelope) a pantalla completa ── */
 .envelope-stage {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
-  perspective: 1800px;
+  perspective: 1200px; 
+  overflow: hidden;
 }
 
-.envelope {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-}
-
+/* 1. Fondo interior del sobre (papel blanco) */
 .envelope-paper {
   position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse at 30% 15%, rgba(255,255,255,0.95), transparent 55%),
-    linear-gradient(170deg, #FDFCFA 0%, #F6F2EC 60%, #F1EBE2 100%);
+  background: #FDFBF7;
+  z-index: 1;
 }
-/* textura de papel (grano fino) */
-.envelope-paper::after,
-.envelope-flap::after {
-  content: '';
-  position: absolute; inset: 0;
+.envelope-paper::after {
+  content: ''; position: absolute; inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity: 0.10;
-  mix-blend-mode: multiply;
-  pointer-events: none;
+  opacity: 0.12; mix-blend-mode: multiply; pointer-events: none;
 }
-.envelope-seams {
+
+/* 2. Solapas laterales (color crema suave) */
+.flap-side {
   position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  z-index: 4;
+  background: #F0EFEA;
+  z-index: 2;
 }
-.envelope-seams{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    z-index:2;
-}
+.flap-left { clip-path: polygon(0 0, 50% 50%, 0 100%); }
+.flap-right { clip-path: polygon(100% 0, 50% 50%, 100% 100%); }
 
-.envelope-seams line{
-    stroke:#798733;
-    stroke-width:0.99;
-    vector-effect:non-scaling-stroke;
-    opacity:.9;
-}
-
-.envelope-flap {
-  position: absolute; top: 0; left: 0;
-  width: 100%; height: 62%;
-  overflow: hidden;
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  background: linear-gradient(155deg, #D6DBC3 99%, #D6DBC3 99%);
-  box-shadow: inset 0 -18px 24px -18px rgba(42,38,34,0.18);
-  transform-origin: top center;
-  transform-style: preserve-3d;
-  transition: transform 1s cubic-bezier(0.6, 0, 0.3, 1);
-  backface-visibility: hidden;
+/* 3. Solapa inferior (degradado sutil) */
+.flap-bottom {
+  position: absolute; inset: 0;
+  background: linear-gradient(0deg, #D2D7C2 0%, #DFE3D3 100%);
+  clip-path: polygon(0 100%, 50% 50%, 100% 100%);
   z-index: 3;
 }
 
-/* ── SELLO DE CERA: contorno ondulado idéntico a la referencia, tipografía sin cambios ── */
+/* 4. Solapa superior (degradado sutil, la que gira) */
+.flap-top {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(180deg, #DFE3D3 0%, #E9ECE0 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 50%);
+  transform-origin: top center;
+  transform-style: preserve-3d;
+  transition: transform 1.2s cubic-bezier(0.5, 0, 0.2, 1);
+  z-index: 5;
+}
+
+/* 5. Líneas delicadas para marcar los dobleces */
+.flap-line {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+.flap-line line {
+  stroke: #52600b; /* Color oscuro incorporado sutilmente */
+  stroke-width: 1.5;
+  opacity: 0.25; 
+  vector-effect: non-scaling-stroke;
+}
+.lines-bottom { z-index: 4; }
+
+/* 6. Textos dentro del sobre con el color solicitado */
+.envelope-text {
+  position: absolute;
+  top: 75%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  z-index: 4;
+  text-align: center;
+  transition: all 0.6s ease;
+}
+.envelope-names {
+  font-weight: 400; font-size: 36px;
+  color: #52600b; /* Nuevo color oscuro */
+  line-height: 1;
+}
+.envelope-names .amp {
+  color: var(--champagne); font-size: 0.75em; padding: 0 4px;
+}
+.envelope-ornament {
+  display: flex; align-items: center; justify-content: center;
+  gap: 16px; margin-top: 15px;
+}
+.envelope-ornament span { 
+  width: 30px; height: 1px; background: #52600b; opacity: 0.4; 
+}
+.envelope-ornament svg { 
+  width: 20px; height: 20px; fill: none; stroke: #52600b; stroke-width: 1; opacity: 0.6; 
+}
+
+/* 7. Sello de cera interactivo */
 .wax-seal {
   position: absolute;
-  top: 62%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
-  width: clamp(90px, 18vw, 140px);
+  width: clamp(90px, 18vw, 130px);
   aspect-ratio: 1;
-
   cursor: pointer;
   z-index: 6;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  animation: pulseSeal 3.8s ease-in-out infinite;
-  transition: transform .35s ease, filter .35s ease;
+  display: flex; align-items: center; justify-content: center;
+  animation: pulseSeal 3s ease-in-out infinite;
+  transition: transform .4s ease, filter .4s ease, opacity .4s ease;
 }
-  .envelope-lines{
-    z-index:4;
-}
-
-.wax-seal img{
-    display:block;
-    width:100%;
-    height:100%;
-    object-fit:contain;
-    background:transparent;
-}
-
-.wax-seal:hover {
-  transform: translate(-50%, -50%) scale(1.08);
-  filter: brightness(1.08);
-}
+.wax-seal img { width:100%; height:100%; object-fit:contain; }
+.wax-seal:hover { transform: translate(-50%, -50%) scale(1.08); filter: brightness(1.1); }
 
 @keyframes pulseSeal {
-  0%, 100% {
-    filter: drop-shadow(0 0 0 rgba(0, 145, 56, 0));
-  }
-  50% {
-    filter: drop-shadow(0 0 12px rgba(0, 145, 56, 0.55));
-  }
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(143, 155, 119, 0)); }
+  50% { filter: drop-shadow(0 0 15px rgba(143, 155, 119, 0.6)); }
 }
 
-/* apertura del sobre */
-.envelope-stage.opening .envelope-flap {
-  transform: rotateX(178deg) translateY(-2px);
+/* ──────────────── EFECTO DE APERTURA ──────────────── */
+.envelope-stage.opening .flap-top {
+  transform: rotateX(165deg); 
 }
 .envelope-stage.opening .wax-seal {
   animation: none;
   opacity: 0;
-  transform: translate(-50%, -50%) scale(0.4) rotate(20deg);
+  transform: translate(-50%, -50%) scale(1.4); 
+  pointer-events: none;
 }
-.envelope-stage.opening .envelope-names,
-.envelope-stage.opening .envelope-ornament {
+.envelope-stage.opening .envelope-text {
   opacity: 0;
   transform: translate(-50%, -40%);
 }
 
-.envelope-names {
-  position: absolute;
-  top: 80%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 92%;
-  font-weight: 400;
-  font-size:28px;
-  color: #5C574C;
-  text-align: center;
-  line-height: 1;
-  z-index: 4;
-  animation: fadeUp 1.2s ease both;
-  transition: opacity 0.7s ease, transform 0.9s cubic-bezier(0.6, 0, 0.3, 1);
-}
-.envelope-names .amp {
-  color: var(--champagne);
-  font-size: 0.75em;
-  padding: 0 4px;
-}
-
-.envelope-ornament {
-  position: absolute;
-  top: 89%; left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex; align-items: center; justify-content: center;
-  gap: 10px;
-  z-index: 4;
-  animation: fadeUp 1.5s ease both;
-  transition: opacity 0.7s ease, transform 0.9s cubic-bezier(0.6, 0, 0.3, 1);
-}
-.envelope-ornament span {
-  width: 30px; height: 1px;
-  background: var(--taupe);
-  opacity: 0.6;
-}
-.envelope-ornament svg {
-  width: 20px; height: 20px;
-  fill: none;
-  stroke: var(--taupe);
-  stroke-width: 1;
-  opacity: 0.75;
-}
-
 #cover-particles {
   position: absolute; inset: 0;
-  width: 100%; height: 100%;
+  width: 120%; height: 120%;
   pointer-events: none;
   z-index: 8;
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translate(-50%, -40%); filter: blur(4px); }
-  to   { opacity: 1; transform: translate(-50%, -50%); filter: blur(0); }
 }
 
 /* ──────────────── MAIN PAGE ──────────────── */
 #main {
   position: relative; z-index: 1;
-  display: flex; flex-direction: column;
+  display: none; flex-direction: column; 
   align-items: center;
   padding: 80px 16px 120px;
   opacity: 0;
-  
+  transition: opacity 1s ease;
 }
-#main.visible { opacity: 1; }
+#main.visible { display: flex; opacity: 1; }
 
 /* ──────────────── CARD ──────────────── */
 .card {
@@ -277,7 +230,6 @@ body {
   padding: 50px 30px;
   position: relative;
 }
-/* Líneas decorativas sutiles */
 .inner-frame::before, .inner-frame::after {
   content: ''; position: absolute; left: 50%; transform: translateX(-50%);
   width: 1px; height: 15px; background: var(--champagne);
@@ -297,7 +249,6 @@ body {
   font-size: 20px; font-weight: 400; font-style: italic;
   color: var(--taupe); line-height: 1.8;
   margin: 0 0 40px;
-  position: relative;
 }
 .bible-ref {
   display: block; margin-top: 14px;
@@ -385,7 +336,7 @@ body {
   display: inline-flex; align-items: center; justify-content: center;
   margin-top: 20px; padding-bottom: 4px;
   color: var(--charcoal);
- font-family: 'Cormorant Garamond', serif;
+  font-family: 'Cormorant Garamond', serif;
   letter-spacing: 0.2em; text-transform: uppercase;
   text-decoration: none; border-bottom: 1px solid var(--champagne);
   transition: all 0.3s ease;
@@ -455,7 +406,6 @@ body {
 }
 .gallery-item {
   position: relative; overflow: hidden; border-radius: 2px;
-  
   box-shadow: 0 4px 15px rgba(0,0,0,0.03);
   aspect-ratio: 4/5; cursor: pointer; transition: all 0.5s ease;
 }
@@ -465,7 +415,7 @@ body {
   width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 1px;
   transition: transform 0.8s ease;
 }
-.gallery-item:hover img { transform: scale(2.0); }
+.gallery-item:hover img { transform: scale(1.05); } 
 
 /* ──────────────── MUSIC PLAYER ──────────────── */
 .music-section { width: 100%; max-width: 540px; margin-bottom: 60px; }
@@ -573,7 +523,7 @@ body {
   <img id="lb-img" src="" alt="">
 </div>
 
-<!-- audio de fondo: reemplazá el src por tu enlace real -->
+<!-- audio de fondo -->
 <audio id="auto"
        preload="auto"
        src="https://www.dropbox.com/scl/fi/ccnveomu6hka0ta0fcekw/Juan-Luis-Guerra-Mi-Bendicion.mp3?rlkey=nyv91ssrycyarxteqvm0csjqp&raw=1">
@@ -581,31 +531,31 @@ body {
 
 <!-- ══════════ COVER PAGE — SOBRE A PANTALLA COMPLETA ══════════ -->
 <div id="cover">
-
   <div class="envelope-stage" id="envelope-stage">
-    <div class="envelope">
-      <div class="envelope-paper"></div>
+    
+    <!-- Interior del sobre -->
+    <div class="envelope-paper"></div>
 
-      <svg class="envelope-seams" viewBox="0 0 300 385" preserveAspectRatio="none">
-        <path d="M8,385 L150,239 L292,385 M8,8 L150,239 M292,8 L150,239" />
-      </svg>
+    <!-- Solapas laterales color crema -->
+    <div class="flap-side flap-left"></div>
+    <div class="flap-side flap-right"></div>
 
-      <div class="envelope-flap" id="envelope-flap"></div>
+    <!-- Solapa inferior verde sutil -->
+    <div class="flap-bottom"></div>
 
-    <div class="wax-seal" id="waxSeal">
-        <img src="https://lh3.googleusercontent.com/d/1lgqZoeIKAL6f5y5YVly7WElZdp3E-GjB" alt="Sello N&R">
-    </div>
-</div>
-      
-      
-      
+    <!-- Bordes para la parte inferior -->
+    <svg class="flap-line lines-bottom" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <line x1="0" y1="100" x2="50" y2="50" />
+      <line x1="100" y1="100" x2="50" y2="50" />
+    </svg>
 
+    <!-- Textos en el centro del sobre (Noelia & Richard) -->
+    <div class="envelope-text">
       <p class="envelope-names">
-    Noelia<br>
-    <span class="amp">&amp;</span><br>
-    Richard
-</p>
-
+        Noelia<br>
+        <span class="amp">&amp;</span><br>
+        Richard
+      </p>
       <div class="envelope-ornament">
         <span></span>
         <svg viewBox="0 0 24 24"><path d="M12 2 C12 8 10 10 4 12 C10 14 12 16 12 22 C12 16 14 14 20 12 C14 10 12 8 12 2 Z"/></svg>
@@ -613,13 +563,25 @@ body {
       </div>
     </div>
 
+    <!-- Solapa superior verde sutil (LA QUE GIRA AL ABRIR) -->
+    <div class="flap-top" id="envelope-flap-top">
+      <svg class="flap-line" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <line x1="0" y1="0" x2="50" y2="50" />
+        <line x1="100" y1="0" x2="50" y2="50" />
+      </svg>
+    </div>
+
+    <!-- Sello N&R Interactivo -->
+    <div class="wax-seal" id="waxSeal" onclick="openInvitation()">
+      <img src="https://lh3.googleusercontent.com/d/1lgqZoeIKAL6f5y5YVly7WElZdp3E-GjB" alt="Sello N&R">
+    </div>
+
+    <!-- Partículas sobre el sobre -->
     <canvas id="cover-particles"></canvas>
   </div>
-
 </div>
 
-
-<!-- ══════════ MAIN CONTENT ══════════ -->
+<!-- ══════════ MAIN CONTENT (LA INVITACIÓN) ══════════ -->
 <div id="main">
 
   <div class="card glass-panel reveal">
@@ -690,6 +652,29 @@ body {
     </div>
   </div>
 
+  <div class="music-section glass-panel reveal">
+    <div class="player-card">
+      <span class="music-label">Nuestra Canción</span>
+      <h3 class="music-title">Mi Bendición</h3>
+      <div class="custom-player">
+        <div class="player-controls">
+          <button class="play-btn" onclick="togglePlay()" id="play-btn">
+            <svg id="play-icon" viewBox="0 0 24 24"><rect x="7" y="6" width="3" height="12"/><rect x="14" y="6" width="3" height="12"/></svg>
+          </button>
+        </div>
+        <div class="progress-wrap" onclick="seekAudio(event)">
+          <div class="progress-bg">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+        </div>
+        <div class="time-row">
+          <span id="cur-time">0:00</span>
+          <span id="dur-time">0:00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ── PHOTO GALLERY ── -->
   <div class="gallery-section glass-panel reveal">
     <p class="section-sub">Memorias capturadas</p>
@@ -706,11 +691,8 @@ body {
       <div class="gallery-item" onclick="openLightbox(this)">
         <img src="https://lh3.googleusercontent.com/d/1FOSvC-eGaJzWpsdJAdFboSf7J_qSLq7n">
       </div>
-
     </div>
   </div>
-
-
 
   <!-- ── WHATSAPP ── -->
   <div class="wa-section glass-panel reveal">
@@ -747,57 +729,50 @@ body {
 
 <script>
 
-  function playMusic() {
-
-    const audio = document.getElementById("auto");
-
-    if (!audio) return;
-
-    audio.volume = 0.3;
-    audio.loop = true;
-
-    audio.play().catch(err => {
-        console.log("No fue posible iniciar el audio:", err);
-    });
-
+function playMusic() {
+  const audio = document.getElementById("auto");
+  if (!audio) return;
+  audio.volume = 0.3;
+  audio.loop = true;
+  audio.play().catch(err => {
+      console.log("No fue posible iniciar el audio:", err);
+      const playIcon = document.getElementById('play-icon');
+      if(playIcon) playIcon.innerHTML = '<polygon points="8,6 18,12 8,18"/>';
+  });
 }
 
-/* ── UI LOGIC: abrir el sobre ── */
+/* ── UI LOGIC: ABRIR EL SOBRE ── */
 let isOpening = false;
 
 function openInvitation() {
+  if (isOpening) return;
+  isOpening = true;
 
-    if (isOpening) return;
-    isOpening = true;
+  playMusic();
 
-    // Inicia la música
-    playMusic();
+  const envelopeStage = document.getElementById("envelope-stage");
+  const cover = document.getElementById("cover");
+  const main = document.getElementById("main");
 
-    const envelopeStage = document.getElementById("envelope-stage");
-    const cover = document.getElementById("cover");
-    const main = document.getElementById("main");
+  // 1. Añade la clase que activa la animación 3D de la solapa y oculta el sello
+  envelopeStage.classList.add("opening");
 
-    // Abrir el sobre
-    envelopeStage.classList.add("opening");
+  // 2. Espera a que termine la animación de la solapa (1.2 seg) y comienza a desvanecer el sobre
+  setTimeout(() => {
+      cover.classList.add("hidden");
+      
+      // 3. Muestra la invitación principal debajo
+      main.classList.add("visible");
+      initReveal();
 
-    // Esperar la animación
-    setTimeout(() => {
-
-        cover.classList.add("hidden");
-
-        setTimeout(() => {
-
-            cover.style.display = "none";
-
-            main.classList.add("visible");
-
-            initReveal();
-
-        }, 1000);
-
-    }, 1100);
-
+      // 4. Una vez totalmente desvanecido, remueve el sobre del flujo de la página
+      setTimeout(() => {
+          cover.style.display = "none";
+      }, 1000);
+      
+  }, 1200);
 }
+
 function initReveal() {
   const els = document.querySelectorAll('.reveal');
   const obs = new IntersectionObserver(entries => {
@@ -831,7 +806,6 @@ const durEl = document.getElementById('dur-time');
 
 function togglePlay() {
   if (!audio) return;
-  if (audio.src.includes('TU_ARCHIVO')) { alert('Reemplaza el src del <audio id="auto"> con tu enlace de música real.'); return; }
   if (audio.paused) {
     audio.play();
     if (playIcon) playIcon.innerHTML = '<rect x="7" y="6" width="3" height="12"/><rect x="14" y="6" width="3" height="12"/>';
@@ -840,16 +814,28 @@ function togglePlay() {
     if (playIcon) playIcon.innerHTML = '<polygon points="8,6 18,12 8,18"/>';
   }
 }
-function fmt(s) { const m = Math.floor(s/60), sec = Math.floor(s%60); return m + ':' + (sec<10?'0':'') + sec; }
+
+function fmt(s) { 
+  if (isNaN(s)) return "0:00";
+  const m = Math.floor(s/60), sec = Math.floor(s%60); 
+  return m + ':' + (sec<10?'0':'') + sec; 
+}
+
 if (audio) {
   audio.addEventListener('timeupdate', () => {
     if (!audio.duration || !fill) return;
     fill.style.width = (audio.currentTime / audio.duration * 100) + '%';
     if (curEl) curEl.textContent = fmt(audio.currentTime);
   });
-  audio.addEventListener('loadedmetadata', () => { if (durEl) durEl.textContent = fmt(audio.duration); });
-  audio.addEventListener('ended', () => { if (playIcon) playIcon.innerHTML = '<polygon points="8,6 18,12 8,18"/>'; if (fill) fill.style.width = '0%'; });
+  audio.addEventListener('loadedmetadata', () => { 
+    if (durEl) durEl.textContent = fmt(audio.duration); 
+  });
+  audio.addEventListener('ended', () => { 
+    if (playIcon) playIcon.innerHTML = '<polygon points="8,6 18,12 8,18"/>'; 
+    if (fill) fill.style.width = '0%'; 
+  });
 }
+
 function seekAudio(e) {
   if (!audio || !audio.duration) return;
   const rect = e.currentTarget.getBoundingClientRect();
@@ -915,7 +901,7 @@ function createParticle() {
   return {
     x: Math.random() * canvas.width, y: Math.random() * canvas.height,
     size: Math.random() * 8 + 2,
-    speedY: Math.random() * -0.5 - 0.1, // Flotan hacia arriba lentamente
+    speedY: Math.random() * -0.5 - 0.1, 
     speedX: (Math.random() - 0.5) * 0.3,
     opacity: Math.random() * 0.4 + 0.1,
     blur: Math.random() * 4 + 1
@@ -929,7 +915,6 @@ function animateParticles() {
     p.y += p.speedY; p.x += p.speedX;
     if (p.y < -20) { Object.assign(p, createParticle()); p.y = canvas.height + 20; }
     
-    // Draw realistic bokeh dot
     ctx.beginPath();
     const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
     gradient.addColorStop(0, `rgba(255, 255, 255, ${p.opacity})`);
