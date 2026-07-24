@@ -555,7 +555,10 @@ body {
 </div>
 
 <!-- audio de fondo: reemplazá el src por tu enlace real -->
-<audio id="auto" src="https://www.dropbox.com/scl/fi/ccnveomu6hka0ta0fcekw/Juan-Luis-Guerra-Mi-Bendicion.mp3?rlkey=nyv91ssrycyarxteqvm0csjqp&st=or40msry&dl=0" preload="none"></audio>
+<audio id="auto"
+       preload="auto"
+       src="https://www.dropbox.com/scl/fi/ccnveomu6hka0ta0fcekw/Juan-Luis-Guerra-Mi-Bendicion.mp3?rlkey=nyv91ssrycyarxteqvm0csjqp&raw=1">
+</audio>
 
 <!-- ══════════ COVER PAGE — SOBRE A PANTALLA COMPLETA ══════════ -->
 <div id="cover">
@@ -738,40 +741,29 @@ body {
   function playMusic() {
 
     const audio = document.getElementById("auto");
-    const playIcon = document.getElementById("play-icon");
 
     if (!audio) return;
 
-    audio.muted = false;
-    audio.volume = 1;
-    audio.preload = "auto";
+    audio.volume = 0.6;
+    audio.loop = true;
 
-    const promise = audio.play();
+    audio.play().catch(err => {
+        console.log("No fue posible iniciar el audio:", err);
+    });
 
-    if (promise !== undefined) {
-        promise.then(() => {
-
-            if (playIcon) {
-                playIcon.innerHTML =
-                '<rect x="7" y="6" width="3" height="12"/><rect x="14" y="6" width="3" height="12"/>';
-            }
-
-        }).catch(error => {
-            console.log("Autoplay bloqueado:", error);
-        });
-    }
 }
 
 /* ── UI LOGIC: abrir el sobre ── */
 let isOpening = false;
 function openInvitation() {
 
-    if (isOpening) return; // evita doble click mientras se abre
+    if (isOpening) return;
     isOpening = true;
 
-    const envelopeStage = document.getElementById("envelope-stage");
-    const cover = document.getElementById("cover");
-    const main = document.getElementById("main");
+    playMusic();
+
+    ...
+}
 
     // Reproducir música
     playMusic();
