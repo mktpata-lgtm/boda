@@ -744,7 +744,7 @@ body {
 
     if (!audio) return;
 
-    audio.volume = 0.6;
+    audio.volume = 0.3;
     audio.loop = true;
 
     audio.play().catch(err => {
@@ -755,15 +755,23 @@ body {
 
 /* ── UI LOGIC: abrir el sobre ── */
 let isOpening = false;
-function openInvitation() { if (isOpening) return; // evita doble click mientras se abre isOpening = true; const envelopeStage = document.getElementById("envelope-stage"); const cover = document.getElementById("cover"); const main = document.getElementById("main");
 
-    // Reproducir música
+function openInvitation() {
+
+    if (isOpening) return;
+    isOpening = true;
+
+    // Inicia la música
     playMusic();
 
-    // 1) La solapa del sobre se abre y el sello de cera se rompe
+    const envelopeStage = document.getElementById("envelope-stage");
+    const cover = document.getElementById("cover");
+    const main = document.getElementById("main");
+
+    // Abrir el sobre
     envelopeStage.classList.add("opening");
 
-    // 2) Tras la animación del sobre, se desvanece toda la portada
+    // Esperar la animación
     setTimeout(() => {
 
         cover.classList.add("hidden");
@@ -781,9 +789,6 @@ function openInvitation() { if (isOpening) return; // evita doble click mientras
     }, 1100);
 
 }
-
-  
-
 function initReveal() {
   const els = document.querySelectorAll('.reveal');
   const obs = new IntersectionObserver(entries => {
