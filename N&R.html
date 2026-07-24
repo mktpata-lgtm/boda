@@ -46,7 +46,7 @@ body {
   pointer-events: none;
   z-index: 0;
   opacity: 0.7;
-  mix-blend-mode: screen;
+  mix-blend-mode: mult;
 }
 
 .glass-panel {
@@ -92,7 +92,7 @@ body {
 /* 2. Solapas laterales (color crema suave) */
 .flap-side {
   position: absolute; inset: 0;
-  background: #F0EFEA;
+  background: #fcf7ed;
   z-index: 2;
 }
 .flap-left { clip-path: polygon(0 0, 50% 50%, 0 100%); }
@@ -101,7 +101,7 @@ body {
 /* 3. Solapa inferior (degradado sutil) */
 .flap-bottom {
   position: absolute; inset: 0;
-  background: linear-gradient(0deg, #D2D7C2 0%, #DFE3D3 100%);
+  background: linear-gradient(0deg, #f9e5c7 0%, #f0f0ef 80%);
   clip-path: polygon(0 100%, 50% 50%, 100% 100%);
   z-index: 3;
 }
@@ -110,7 +110,7 @@ body {
 .flap-top {
   position: absolute; top: 0; left: 0;
   width: 100%; height: 100%;
-  background: linear-gradient(180deg, #DFE3D3 0%, #E9ECE0 100%);
+  background: linear-gradient(180deg, #f9e5c7 0%, #f0f0ef 80%);
   clip-path: polygon(0 0, 100% 0, 50% 50%);
   transform-origin: top center;
   transform-style: preserve-3d;
@@ -120,13 +120,13 @@ body {
 
 /* 5. Líneas delicadas para marcar los dobleces */
 .flap-line {
-  position: absolute; inset: 0;
+  position: absolute; inset: 50;
   width: 100%; height: 100%;
   pointer-events: none;
 }
 .flap-line line {
-  stroke: #52600b; /* Color oscuro incorporado sutilmente */
-  stroke-width: 1.5;
+  stroke: #efe4cb; /* Color oscuro incorporado sutilmente */
+  stroke-width: 30;
   opacity: 0.25; 
   vector-effect: non-scaling-stroke;
 }
@@ -135,30 +135,31 @@ body {
 /* 6. Textos dentro del sobre con el color solicitado */
 .envelope-text {
   position: absolute;
-  top: 75%; left: 50%;
+  top: 70%; left: 50%;
   transform: translate(-50%, -50%);
-  width: 90%;
+  width: 30%;
   z-index: 4;
   text-align: center;
   transition: all 0.6s ease;
 }
 .envelope-names {
-  font-weight: 400; font-size: 36px;
-  color: #52600b; /* Nuevo color oscuro */
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 100; font-size: 36px;
+  color: #9A6514; /* Nuevo color oscuro */
   line-height: 1;
 }
 .envelope-names .amp {
-  color: var(--champagne); font-size: 0.75em; padding: 0 4px;
+  color: #5A3908; font-size: 0.75em; padding: 0 4px;
 }
 .envelope-ornament {
   display: flex; align-items: center; justify-content: center;
   gap: 16px; margin-top: 15px;
 }
 .envelope-ornament span { 
-  width: 30px; height: 1px; background: #52600b; opacity: 0.4; 
+  width: 30px; height: 1px; background: #9A6514; 
 }
 .envelope-ornament svg { 
-  width: 20px; height: 20px; fill: none; stroke: #52600b; stroke-width: 1; opacity: 0.6; 
+  width: 20px; height: 20px; fill: none; stroke: #9A6514; stroke-width: 1; opacity: 0.6; 
 }
 
 /* 7. Sello de cera interactivo */
@@ -167,15 +168,15 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: clamp(90px, 18vw, 130px);
+  width: clamp(100px, 29vw, 130px);
   aspect-ratio: 1;
   cursor: pointer;
   z-index: 6;
   display: flex; align-items: center; justify-content: center;
-  animation: pulseSeal 3s ease-in-out infinite;
+  animation: pulseSeal 6s ease-in-out infinite;
   transition: transform .4s ease, filter .4s ease, opacity .4s ease;
 }
-.wax-seal img { width:100%; height:100%; object-fit:contain; }
+.wax-seal img { width:120%; height:120%; object-fit:contain; }
 .wax-seal:hover { transform: translate(-50%, -50%) scale(1.08); filter: brightness(1.1); }
 
 @keyframes pulseSeal {
