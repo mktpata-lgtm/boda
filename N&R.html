@@ -755,15 +755,7 @@ body {
 
 /* ── UI LOGIC: abrir el sobre ── */
 let isOpening = false;
-function openInvitation() {
-
-    if (isOpening) return;
-    isOpening = true;
-
-    playMusic();
-
-    ...
-}
+function openInvitation() { if (isOpening) return; // evita doble click mientras se abre isOpening = true; const envelopeStage = document.getElementById("envelope-stage"); const cover = document.getElementById("cover"); const main = document.getElementById("main");
 
     // Reproducir música
     playMusic();
