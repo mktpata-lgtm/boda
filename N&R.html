@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Noelia & Richard — Invitación de Boda</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Great+Vibes&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -29,7 +29,6 @@ body {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  font-family: 'Jost', sans-serif;
   color: var(--charcoal);
   overflow-x: hidden;
 }
@@ -64,11 +63,6 @@ body {
 /* ──────────────── COVER PAGE ──────────────── */
 #cover {
   position: fixed; inset: 0;
-  background: rgba(247, 245, 242, 0.88);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
   z-index: 50;
   transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -78,74 +72,165 @@ body {
   pointer-events: none;
 }
 
-.cover-rings {
-  width: 70px; height: 70px;
-  margin-bottom: 40px;
-  animation: floatRings 5s ease-in-out infinite;
-  filter: drop-shadow(0 10px 15px rgba(205,182,147,0.2));
-}
-@keyframes floatRings {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-6px); }
+/* ── SOBRE (envelope) a pantalla completa ── */
+.envelope-stage {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  perspective: 1800px;
 }
 
-.cover-title {
+.envelope {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.envelope-paper {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 15%, rgba(255,255,255,0.95), transparent 55%),
+    linear-gradient(170deg, #FDFCFA 0%, #F6F2EC 60%, #F1EBE2 100%);
+}
+/* textura de papel (grano fino) */
+.envelope-paper::after,
+.envelope-flap::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.envelope-seams {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  z-index: 4;
+}
+.envelope-seams path {
+  fill: none;
+  stroke: var(--champagne);
+  stroke-width: 0.7;
+  opacity: 0.6;
+}
+
+.envelope-flap {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 62%;
+  overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background: linear-gradient(155deg, #FFFFFF 0%, #F7F3EC 100%);
+  box-shadow: inset 0 -18px 24px -18px rgba(42,38,34,0.18);
+  transform-origin: top center;
+  transform-style: preserve-3d;
+  transition: transform 1s cubic-bezier(0.6, 0, 0.3, 1);
+  backface-visibility: hidden;
+  z-index: 3;
+}
+
+/* ── SELLO DE CERA: contorno ondulado idéntico a la referencia, tipografía sin cambios ── */
+.wax-seal {
+  position: absolute;
+  top: 62%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(50px, 100.5vw, 1220px); height: clamp(50px, 100.5vw, 160px);
+  display: flex; align-items: center; justify-content: center;
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(52px, 12vw, 84px);
-  font-weight: 300;
-  color: var(--charcoal);
+  cursor: pointer;
+  z-index: 5;
+  animation: pulseSeal 3.8s ease-in-out infinite;
+  transition: transform 0.9s cubic-bezier(0.6, 0, 0.3, 1), opacity 0.7s ease;
+}
+.wax-seal .seal-shape {
+  position: absolute; inset: 100;
+  width: 130%; height: 130%;
+  overflow: visible;
+}
+.wax-seal .seal-initials {
+  position: relative;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300; font-style: normal;
+  font-size: clamp(60px, 4vw, 36px);
+  letter-spacing: -0.08em;
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.);
+}
+.wax-seal:hover { transform: translate(-50%, -50%) scale(1.06); }
+.wax-seal:hover .seal-shape path.seal-base { filter: brightness(1.05); }
+@keyframes pulseSeal {
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(0,145,56,0)); }
+  50%       { filter: drop-shadow(0 0 10px rgba(0,145,56,0.55)); }
+}
+
+/* apertura del sobre */
+.envelope-stage.opening .envelope-flap {
+  transform: rotateX(178deg) translateY(-2px);
+}
+.envelope-stage.opening .wax-seal {
+  animation: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.4) rotate(20deg);
+}
+.envelope-stage.opening .envelope-names,
+.envelope-stage.opening .envelope-ornament {
+  opacity: 0;
+  transform: translate(-50%, -40%);
+}
+
+.envelope-names {
+  position: absolute;
+  top: 80%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 92%;
+  font-weight: 400;
+  font-size:28px;
+  color: #5C574C;
   text-align: center;
   line-height: 1;
-  letter-spacing: -0.02em;
+  z-index: 4;
   animation: fadeUp 1.2s ease both;
+  transition: opacity 0.7s ease, transform 0.9s cubic-bezier(0.6, 0, 0.3, 1);
 }
-.cover-title .amp {
-  display: block;
+.envelope-names .amp {
   color: var(--champagne);
-  font-size: 0.9em;
-  font-style: italic;
-  font-weight: 300;
-  margin: 10px 0;
-  animation: fadeUp 1.4s ease both;
-}
-.cover-sub {
-  font-size: 11px; font-weight: 300;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: var(--taupe);
-  margin-top: 24px;
-  animation: fadeUp 1.6s ease both;
+  font-size: 0.75em;
+  padding: 0 4px;
 }
 
-.open-btn {
-  margin-top: 60px;
-  background: transparent;
-  color: var(--charcoal);
-  border: 1px solid var(--champagne);
-  border-radius: 40px;
-  padding: 14px 48px;
-  font-family: 'Jost', sans-serif;
-  font-size: 11px; font-weight: 400;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.5s ease;
-  animation: fadeUp 1.8s ease both;
+.envelope-ornament {
+  position: absolute;
+  top: 89%; left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px;
+  z-index: 4;
+  animation: fadeUp 1.5s ease both;
+  transition: opacity 0.7s ease, transform 0.9s cubic-bezier(0.6, 0, 0.3, 1);
 }
-.open-btn::before {
-  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  background: var(--champagne);
-  z-index: -1; transform: scaleX(0); transform-origin: right;
-  transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+.envelope-ornament span {
+  width: 30px; height: 1px;
+  background: var(--taupe);
+  opacity: 0.6;
 }
-.open-btn:hover { color: var(--white); border-color: var(--champagne); letter-spacing: 0.35em; }
-.open-btn:hover::before { transform: scaleX(1); transform-origin: left; }
+.envelope-ornament svg {
+  width: 20px; height: 20px;
+  fill: none;
+  stroke: var(--taupe);
+  stroke-width: 1;
+  opacity: 0.75;
+}
+
+#cover-particles {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 8;
+}
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(25px); filter: blur(4px); }
-  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+  from { opacity: 0; transform: translate(-50%, -40%); filter: blur(4px); }
+  to   { opacity: 1; transform: translate(-50%, -50%); filter: blur(0); }
 }
 
 /* ──────────────── MAIN PAGE ──────────────── */
@@ -197,7 +282,7 @@ body {
 }
 .bible-ref {
   display: block; margin-top: 14px;
-  font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 400;
+  font-family: 'Cormorant Garamond', serif;
   letter-spacing: 0.25em; text-transform: uppercase; color: var(--champagne);
   font-style: normal;
 }
@@ -281,7 +366,7 @@ body {
   display: inline-flex; align-items: center; justify-content: center;
   margin-top: 20px; padding-bottom: 4px;
   color: var(--charcoal);
-  font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 400;
+ font-family: 'Cormorant Garamond', serif;
   letter-spacing: 0.2em; text-transform: uppercase;
   text-decoration: none; border-bottom: 1px solid var(--champagne);
   transition: all 0.3s ease;
@@ -469,21 +554,56 @@ body {
   <img id="lb-img" src="" alt="">
 </div>
 
-<!-- ══════════ COVER PAGE ══════════ -->
+<!-- audio de fondo: reemplazá el src por tu enlace real -->
+<audio id="auto" src="https://www.dropbox.com/scl/fi/ccnveomu6hka0ta0fcekw/Juan-Luis-Guerra-Mi-Bendicion.mp3?rlkey=nyv91ssrycyarxteqvm0csjqp&st=or40msry&dl=0" preload="none"></audio>
+
+<!-- ══════════ COVER PAGE — SOBRE A PANTALLA COMPLETA ══════════ -->
 <div id="cover">
-  <svg class="cover-rings" viewBox="0 0 90 90" fill="none">
-    <circle cx="35" cy="45" r="24" stroke="var(--champagne)" stroke-width="0.8"/>
-    <circle cx="55" cy="45" r="24" stroke="var(--champagne)" stroke-width="0.8"/>
-  </svg>
 
-  <div class="cover-title">
-    Noelia
-    <span class="amp">&</span>
+  <div class="envelope-stage" id="envelope-stage">
+    <div class="envelope">
+      <div class="envelope-paper"></div>
+
+      <svg class="envelope-seams" viewBox="0 0 300 385" preserveAspectRatio="none">
+        <path d="M8,385 L150,239 L292,385 M8,8 L150,239 M292,8 L150,239" />
+      </svg>
+
+      <div class="envelope-flap" id="envelope-flap"></div>
+
+      <div class="wax-seal" id="wax-seal" onclick="openInvitation()">
+        <svg class="seal-shape" viewBox="0 0 100 100">
+          <defs>
+            <radialGradient id="sealGrad" cx="35%" cy="26%" r="80%">
+              <stop offset="0%" stop-color="#a9bb6a"/>
+              <stop offset="45%" stop-color="#7c9138"/>
+              <stop offset="100%" stop-color="#4d5919"/>
+            </radialGradient>
+          </defs>
+          <path class="seal-base" fill="url(#sealGrad)"
+            d="M97.50,50.00 C97.50,51.95 95.97,54.15 94.37,55.84 C92.77,57.53 89.69,58.80 87.91,60.16 C86.14,61.51 84.38,62.39 83.72,63.97 C83.07,65.55 83.69,67.41 83.99,69.62 C84.29,71.84 85.57,74.91 85.50,77.24 C85.44,79.57 84.96,82.21 83.59,83.59 C82.21,84.96 79.57,85.44 77.24,85.50 C74.91,85.57 71.84,84.29 69.62,83.99 C67.41,83.69 65.55,83.07 63.97,83.72 C62.39,84.38 61.51,86.14 60.16,87.91 C58.80,89.69 57.53,92.77 55.84,94.37 C54.15,95.97 51.95,97.50 50.00,97.50 C48.05,97.50 45.85,95.97 44.16,94.37 C42.47,92.77 41.20,89.69 39.84,87.91 C38.49,86.14 37.61,84.38 36.03,83.72 C34.45,83.07 32.59,83.69 30.38,83.99 C28.16,84.29 25.09,85.57 22.76,85.50 C20.43,85.44 17.79,84.96 16.41,83.59 C15.04,82.21 14.56,79.57 14.50,77.24 C14.43,74.91 15.71,71.84 16.01,69.62 C16.31,67.41 16.93,65.55 16.28,63.97 C15.62,62.39 13.86,61.51 12.09,60.16 C10.31,58.80 7.23,57.53 5.63,55.84 C4.03,54.15 2.50,51.95 2.50,50.00 C2.50,48.05 4.03,45.85 5.63,44.16 C7.23,42.47 10.31,41.20 12.09,39.84 C13.86,38.49 15.62,37.61 16.28,36.03 C16.93,34.45 16.31,32.59 16.01,30.38 C15.71,28.16 14.43,25.09 14.50,22.76 C14.56,20.43 15.04,17.79 16.41,16.41 C17.79,15.04 20.43,14.56 22.76,14.50 C25.09,14.43 28.16,15.71 30.37,16.01 C32.59,16.31 34.45,16.93 36.03,16.28 C37.61,15.62 38.49,13.86 39.84,12.09 C41.20,10.31 42.47,7.23 44.16,5.63 C45.85,4.03 48.05,2.50 50.00,2.50 C51.95,2.50 54.15,4.03 55.84,5.63 C57.53,7.23 58.80,10.31 60.16,12.09 C61.51,13.86 62.39,15.62 63.97,16.28 C65.55,16.93 67.41,16.31 69.62,16.01 C71.84,15.71 74.91,14.43 77.24,14.50 C79.57,14.56 82.21,15.04 83.59,16.41 C84.96,17.79 85.44,20.43 85.50,22.76 C85.57,25.09 84.29,28.16 83.99,30.37 C83.69,32.59 83.07,34.45 83.72,36.03 C84.38,37.61 86.14,38.49 87.91,39.84 C89.69,41.20 92.77,42.47 94.37,44.16 C95.97,45.85 97.50,48.05 97.50,50.00 Z" />
+          <path fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.8"
+            transform="translate(50 50) scale(0.86) translate(-50 -50)"
+            d="M97.50,50.00 C97.50,51.95 95.97,54.15 94.37,55.84 C92.77,57.53 89.69,58.80 87.91,60.16 C86.14,61.51 84.38,62.39 83.72,63.97 C83.07,65.55 83.69,67.41 83.99,69.62 C84.29,71.84 85.57,74.91 85.50,77.24 C85.44,79.57 84.96,82.21 83.59,83.59 C82.21,84.96 79.57,85.44 77.24,85.50 C74.91,85.57 71.84,84.29 69.62,83.99 C67.41,83.69 65.55,83.07 63.97,83.72 C62.39,84.38 61.51,86.14 60.16,87.91 C58.80,89.69 57.53,92.77 55.84,94.37 C54.15,95.97 51.95,97.50 50.00,97.50 C48.05,97.50 45.85,95.97 44.16,94.37 C42.47,92.77 41.20,89.69 39.84,87.91 C38.49,86.14 37.61,84.38 36.03,83.72 C34.45,83.07 32.59,83.69 30.38,83.99 C28.16,84.29 25.09,85.57 22.76,85.50 C20.43,85.44 17.79,84.96 16.41,83.59 C15.04,82.21 14.56,79.57 14.50,77.24 C14.43,74.91 15.71,71.84 16.01,69.62 C16.31,67.41 16.93,65.55 16.28,63.97 C15.62,62.39 13.86,61.51 12.09,60.16 C10.31,58.80 7.23,57.53 5.63,55.84 C4.03,54.15 2.50,51.95 2.50,50.00 C2.50,48.05 4.03,45.85 5.63,44.16 C7.23,42.47 10.31,41.20 12.09,39.84 C13.86,38.49 15.62,37.61 16.28,36.03 C16.93,34.45 16.31,32.59 16.01,30.38 C15.71,28.16 14.43,25.09 14.50,22.76 C14.56,20.43 15.04,17.79 16.41,16.41 C17.79,15.04 20.43,14.56 22.76,14.50 C25.09,14.43 28.16,15.71 30.37,16.01 C32.59,16.31 34.45,16.93 36.03,16.28 C37.61,15.62 38.49,13.86 39.84,12.09 C41.20,10.31 42.47,7.23 44.16,5.63 C45.85,4.03 48.05,2.50 50.00,2.50 C51.95,2.50 54.15,4.03 55.84,5.63 C57.53,7.23 58.80,10.31 60.16,12.09 C61.51,13.86 62.39,15.62 63.97,16.28 C65.55,16.93 67.41,16.31 69.62,16.01 C71.84,15.71 74.91,14.43 77.24,14.50 C79.57,14.56 82.21,15.04 83.59,16.41 C84.96,17.79 85.44,20.43 85.50,22.76 C85.57,25.09 84.29,28.16 83.99,30.37 C83.69,32.59 83.07,34.45 83.72,36.03 C84.38,37.61 86.14,38.49 87.91,39.84 C89.69,41.20 92.77,42.47 94.37,44.16 C95.97,45.85 97.50,48.05 97.50,50.00 Z" />
+        </svg>
+        <span class="seal-initials">N&R</span>
+      </div>
+
+      <p class="envelope-names">
+    Noelia<br>
+    <span class="amp">&amp;</span><br>
     Richard
-  </div>
-  <p class="cover-sub">02 · Septiembre · 2026</p>
+</p>
 
-  <button class="open-btn" onclick="openInvitation()">Descubrir</button>
+      <div class="envelope-ornament">
+        <span></span>
+        <svg viewBox="0 0 24 24"><path d="M12 2 C12 8 10 10 4 12 C10 14 12 16 12 22 C12 16 14 14 20 12 C14 10 12 8 12 2 Z"/></svg>
+        <span></span>
+      </div>
+    </div>
+
+    <canvas id="cover-particles"></canvas>
+  </div>
+
 </div>
 
 
@@ -641,37 +761,25 @@ body {
         });
     }
 }
-/* ── UI LOGIC ── */
+
+/* ── UI LOGIC: abrir el sobre ── */
+let isOpening = false;
 function openInvitation() {
+
+    if (isOpening) return; // evita doble click mientras se abre
+    isOpening = true;
+
+    const envelopeStage = document.getElementById("envelope-stage");
+    const cover = document.getElementById("cover");
+    const main = document.getElementById("main");
 
     // Reproducir música
     playMusic();
 
-    const cover = document.getElementById("cover");
-    const main = document.getElementById("main");
+    // 1) La solapa del sobre se abre y el sello de cera se rompe
+    envelopeStage.classList.add("opening");
 
-    // Ocultar el botón y el texto
-    cover.innerHTML = `
-        <div style="
-            width:100%;
-            height:100vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            animation:fadeUp 1s;
-        ">
-
-            <img
-                src="https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=2070&auto=format&fit=crop"
-                style="
-                    width:auto;
-                    max-width:auto;
-                ">
-
-        </div>
-    `;
-
-    // Esperar 2.5 segundos mostrando el anillo
+    // 2) Tras la animación del sobre, se desvanece toda la portada
     setTimeout(() => {
 
         cover.classList.add("hidden");
@@ -684,9 +792,9 @@ function openInvitation() {
 
             initReveal();
 
-        },1000);
+        }, 1000);
 
-    },2500);
+    }, 1100);
 
 }
 
@@ -724,28 +832,78 @@ const curEl = document.getElementById('cur-time');
 const durEl = document.getElementById('dur-time');
 
 function togglePlay() {
-  if (audio.src.includes('TU_ARCHIVO')) { alert('Reemplaza "https://www.dropbox.com/scl/fi/ccnveomu6hka0ta0fcekw/Juan-Luis-Guerra-Mi-Bendicion.mp3?rlkey=nyv91ssrycyarxteqvm0csjqp&st=3hgjw7y0&dl=0" con tu enlace de música real.'); return; }
+  if (!audio) return;
+  if (audio.src.includes('TU_ARCHIVO')) { alert('Reemplaza el src del <audio id="auto"> con tu enlace de música real.'); return; }
   if (audio.paused) {
     audio.play();
-    playIcon.innerHTML = '<rect x="7" y="6" width="3" height="12"/><rect x="14" y="6" width="3" height="12"/>';
+    if (playIcon) playIcon.innerHTML = '<rect x="7" y="6" width="3" height="12"/><rect x="14" y="6" width="3" height="12"/>';
   } else {
     audio.pause();
-    playIcon.innerHTML = '<polygon points="8,6 18,12 8,18"/>';
+    if (playIcon) playIcon.innerHTML = '<polygon points="8,6 18,12 8,18"/>';
   }
 }
 function fmt(s) { const m = Math.floor(s/60), sec = Math.floor(s%60); return m + ':' + (sec<10?'0':'') + sec; }
-audio.addEventListener('timeupdate', () => {
-  if (!audio.duration) return;
-  fill.style.width = (audio.currentTime / audio.duration * 100) + '%';
-  curEl.textContent = fmt(audio.currentTime);
-});
-audio.addEventListener('loadedmetadata', () => { durEl.textContent = fmt(audio.duration); });
-audio.addEventListener('ended', () => { playIcon.innerHTML = '<polygon points="8,6 18,12 8,18"/>'; fill.style.width = '0%'; });
+if (audio) {
+  audio.addEventListener('timeupdate', () => {
+    if (!audio.duration || !fill) return;
+    fill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+    if (curEl) curEl.textContent = fmt(audio.currentTime);
+  });
+  audio.addEventListener('loadedmetadata', () => { if (durEl) durEl.textContent = fmt(audio.duration); });
+  audio.addEventListener('ended', () => { if (playIcon) playIcon.innerHTML = '<polygon points="8,6 18,12 8,18"/>'; if (fill) fill.style.width = '0%'; });
+}
 function seekAudio(e) {
-  if (!audio.duration) return;
+  if (!audio || !audio.duration) return;
   const rect = e.currentTarget.getBoundingClientRect();
   audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
 }
+
+/* ── PARTÍCULAS DE MOVIMIENTO SOBRE EL SOBRE ── */
+const coverCanvas = document.getElementById('cover-particles');
+const coverCtx = coverCanvas.getContext('2d');
+let coverParticles = [];
+
+function resizeCoverCanvas() {
+  const stage = document.getElementById('envelope-stage');
+  coverCanvas.width = stage.clientWidth;
+  coverCanvas.height = stage.clientHeight;
+}
+window.addEventListener('resize', resizeCoverCanvas);
+resizeCoverCanvas();
+
+function createCoverParticle() {
+  return {
+    x: Math.random() * coverCanvas.width,
+    y: Math.random() * coverCanvas.height,
+    size: Math.random() * 2.2 + 0.8,
+    speedY: Math.random() * -0.3 - 0.06,
+    speedX: (Math.random() - 0.5) * 0.2,
+    opacity: Math.random() * 0.45 + 0.15
+  };
+}
+for (let i = 0; i < 28; i++) coverParticles.push(createCoverParticle());
+
+function animateCoverParticles() {
+  coverCtx.clearRect(0, 0, coverCanvas.width, coverCanvas.height);
+  const cover = document.getElementById('cover');
+  if (cover.style.display !== 'none') {
+    coverParticles.forEach(p => {
+      p.y += p.speedY; p.x += p.speedX;
+      if (p.y < -10) { Object.assign(p, createCoverParticle()); p.y = coverCanvas.height + 10; }
+
+      coverCtx.beginPath();
+      const g = coverCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3.5);
+      g.addColorStop(0, `rgba(255, 250, 235, ${p.opacity})`);
+      g.addColorStop(0.5, `rgba(205, 182, 147, ${p.opacity * 0.5})`);
+      g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      coverCtx.fillStyle = g;
+      coverCtx.arc(p.x, p.y, p.size * 3.5, 0, Math.PI * 2);
+      coverCtx.fill();
+    });
+  }
+  requestAnimationFrame(animateCoverParticles);
+}
+animateCoverParticles();
 
 /* ── ULTRA REALISTIC BOKEH PARTICLES ── */
 const canvas = document.getElementById('petals-canvas');
