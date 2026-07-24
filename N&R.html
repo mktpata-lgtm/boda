@@ -108,11 +108,19 @@ z
   width: 100%; height: 100%;
   z-index: 4;
 }
-.envelope-seams path {
-  fill: none;
-  stroke: var(--champagne);
-  stroke-width: 0.7;
-  opacity: 0.9;
+.envelope-seams{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:2;
+}
+
+.envelope-seams line{
+    stroke:#c8b48b;
+    stroke-width:0.55;
+    vector-effect:non-scaling-stroke;
+    opacity:.9;
 }
 
 .envelope-flap {
